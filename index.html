@@ -1,92 +1,113 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đợi 5 Bước - CGH MÃI ĐỈNH</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #121212;
-            color: white;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            color: #ffcc00;
-        }
-        .container {
-            max-width: 400px;
-            margin: auto;
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-        }
-        .timer {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-        .btn {
-            padding: 10px 20px;
-            font-size: 18px;
-            color: white;
-            background: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .btn:disabled {
-            background: gray;
-            cursor: not-allowed;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Discord Name + Password Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #2c2f33;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 50px;
+    }
+    .box {
+      background: #23272a;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #000;
+      width: 320px;
+      text-align: center;
+    }
+    button {
+      padding: 10px 15px;
+      border: none;
+      background: #7289da;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: none;
+      text-align: center;
+    }
+    .field-group {
+      margin-bottom: 10px;
+    }
+    .copy-btn {
+      margin-left: 5px;
+      background: #43b581;
+    }
+  </style>
 </head>
 <body>
-    <h1>CGH MÃI ĐỈNH</h1>
-    <div class="container">
-        <p>Bước <span id="step">1</span>/5</p>
-        <p class="timer">Vui lòng đợi <span id="countdown">1</span> giây...</p>
-        <button class="btn" id="nextBtn" disabled>Tiếp theo</button>
+
+  <div class="box">
+    <h2>✨ Tạo tài khoản Discord ngẫu nhiên</h2>
+    
+    <div class="field-group">
+      <input type="text" id="username" placeholder="Tên người dùng" readonly>
+      <button class="copy-btn" onclick="copyText('username')">Copy</button>
     </div>
 
-    <script>
-        let steps = [3, 6, 9, 12, 15]; // Thời gian đếm ngược cho từng bước
-        let currentStep = 0;
-        let countdownElement = document.getElementById("countdown");
-        let stepElement = document.getElementById("step");
-        let nextBtn = document.getElementById("nextBtn");
+    <div class="field-group">
+      <input type="text" id="password" placeholder="Mật khẩu" readonly>
+      <button class="copy-btn" onclick="copyText('password')">Copy</button>
+    </div>
 
-        function startCountdown(seconds) {
-            let remaining = seconds;
-            countdownElement.innerText = remaining;
-            nextBtn.disabled = true;
+    <button onclick="generate()">Tạo mới</button>
+    <p id="msg" style="margin-top: 10px; color: #00ff99;"></p>
+  </div>
 
-            let countdownInterval = setInterval(() => {
-                remaining--;
-                countdownElement.innerText = remaining;
+  <script>
+    const usernames = [
+      "DarkWolf", "PixelNeko", "GhostRider", "SenpaiKiller", "Zeno", "Crimson", "SilentFox",
+      "LunaChan", "NeoXD", "SkullFace", "NightCore", "R3ktBot", "Vortex", "AquaTiger", "CyberBoy"
+    ];
 
-                if (remaining <= 0) {
-                    clearInterval(countdownInterval);
-                    nextBtn.disabled = false;
-                }
-            }, 1000);
-        }
+    function getRandomUsername() {
+      const name = usernames[Math.floor(Math.random() * usernames.length)];
+      const tag = Math.floor(1000 + Math.random() * 9000);
+      return `${name}#${tag}`;
+    }
 
-        nextBtn.addEventListener("click", () => {
-            currentStep++;
-            if (currentStep < steps.length) {
-                stepElement.innerText = currentStep + 1;
-                startCountdown(steps[currentStep]);
-            } else {
-                window.location.href = "https://link-target.net/1307843/step-2"; // Thay link cần chuyển hướng vào đây
-            }
-        });
+    function getRandomPassword(length = 12) {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+      let pass = "";
+      for (let i = 0; i < length; i++) {
+        pass += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return pass;
+    }
 
-        // Bắt đầu bước đầu tiên
-        startCountdown(steps[0]);
-    </script>
+    function generate() {
+      document.getElementById("username").value = getRandomUsername();
+      document.getElementById("password").value = getRandomPassword();
+      document.getElementById("msg").textContent = "";
+    }
+
+    function copyText(id) {
+      const input = document.getElementById(id);
+      input.select();
+      input.setSelectionRange(0, 99999); // Cho mobile
+      document.execCommand("copy");
+
+      const label = id === "username" ? "Tên người dùng" : "Mật khẩu";
+      document.getElementById("msg").textContent = `✅ Đã sao chép ${label}!`;
+
+      setTimeout(() => {
+        document.getElementById("msg").textContent = "";
+      }, 2000);
+    }
+  </script>
+
 </body>
 </html>
